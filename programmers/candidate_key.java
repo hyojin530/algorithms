@@ -5,6 +5,8 @@ import java.util.*;
 
 class Solution {
     
+    List<List<Integer>> combiKeys = new ArrayList<>();
+    
     public int keyCombi(String[][] relation, List<Integer> keyList, int combiNum){
         List<List<Integer>> combiList = new ArrayList<>();
         
@@ -16,17 +18,37 @@ class Solution {
                 }
             }
             if(combi.size() == combiNum){
-                combiList.add(combi);
+                if(combiKeys.size()>0){
+                    int check = 0;
+                    for(List<Integer> combiKey: combiKeys){
+                        if(check == 1){
+                            break;
+                        }
+                        for(Integer num: combiKey){
+                            if(combi.indexOf(num)==-1){
+                                check = 0;
+                                break;
+                            } else {
+                                check = 1;
+                            }
+                        }
+                    }
+                    if(check == 0){
+                        combiList.add(combi);
+                    }
+                } else {
+                    combiList.add(combi);
+                }
             }
         }
-
-        int keyNum = 0;
-        List<Integer> removeList = new ArrayList<>();
         
+        System.out.println(combiList);
+        
+        int keyNum = 0;
         for(List<Integer> combi: combiList){
             HashMap<String, Integer> checkMap = new HashMap<>();
             int unique = 1;
-            
+
             for(String[] data: relation){
                 StringBuilder keyBuilder = new StringBuilder();
                 for(Integer num: combi){
@@ -41,17 +63,11 @@ class Solution {
                     checkMap.put(key, 1);
                 }
             }
-            
+
             if(unique==1){
                 keyNum++;
-                for(Integer num: combi){
-                    removeList.add(num);
-                }
+                combiKeys.add(combi);
             }
-        }
-        
-        for(Integer num: removeList){
-            keyList.remove(num);
         }
         
         return keyNum;
@@ -85,6 +101,7 @@ class Solution {
         while(keyList.size() >= combiNum){
             answer += keyCombi(relation, keyList, combiNum);
             combiNum++;
+            System.out.println(combiKeys);
         }
 
         System.out.println(keyList);
