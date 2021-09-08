@@ -5,57 +5,53 @@ import java.util.*;
 
 class Solution {
     HashSet<String> gemSet = new HashSet<>();
-    
-    public int findSection(String[] gems, int start, int gemSize){
-        int end = -1;
-        for(int i=start+gemSize; i<gems.length; i++){
 
-            String[] gemArray = Arrays.copyOfRange(gems, start, i);
-            HashSet<String> tempSet = new HashSet<>();
-            for(String gem: gemArray){
-
-                tempSet.add(gem);
-            }
-            if(Arrays.equals(gemSet.toArray(), tempSet.toArray())){
-
-                end = i;
-                break;
-            }
-        }
-        
-        return end;
-    }
-    
-    public int[] solution(String[] gems) {
-        int[] answer = new int[2];
-        
+    public void makeSet(String[] gems){
         for(String gem: gems){
             gemSet.add(gem);
         }
-        
-        System.out.println(gemSet);
-        int gemSize = gemSet.size();
+    }
+
+    public int[] solution(String[] gems) {
+        int[] answer = new int[2];
+        makeSet(gems);
+
+        int size = gemSet.size();
         int start = 0;
-        int end = gems.length;
-        int length = gems.length;
-        
-        for(int i=0; i<(gems.length-gemSize); i++){
-            int tempStart = i;
-            int tempEnd = findSection(gems, i, gemSize);
-            if(tempEnd != -1){
-                if(tempEnd-tempStart<length){
-                    System.out.println("start"+tempStart);
-                    System.out.println("start"+tempEnd);
-                    start = tempStart;
-                    end = tempEnd;
-                    length = tempEnd-tempStart;
+        int end = 0;
+        int length = gems.length+1;
+
+        Map<String, Integer> gemMap = new HashMap<>();
+
+        while(true){
+            int keySize = gemMap.keySet().size();
+            if(start == gems.length){
+                break;
+            } else if(keySize==size){
+                int present = end-start;
+                if(length>present){
+                    answer[0] = start;
+                    answer[1] = end;
+                    length = present;
                 }
+                String key = gems[start];
+                gemMap.put(key, gemMap.get(key)-1);
+                if(gemMap.get(key)==0){
+                    gemMap.remove(key);
+                }
+                start++;
+            } else if(end == gems.length){
+                break;
+            } else {
+                String gem = gems[end];
+                gemMap.put(gem, gemMap.getOrDefault(gem, 0)+1);
+                end++;
             }
+
         }
-        
-        answer[0] = start+1;
-        answer[1] = end;
-        
+
+        answer[0]++;
+
         return answer;
     }
 }
