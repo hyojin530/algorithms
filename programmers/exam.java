@@ -14,7 +14,6 @@ class Solution {
                 correct++;
             }
         }
-        
         return correct;
     }
     
@@ -44,7 +43,6 @@ class Solution {
         for(int s=0; s<person.size(); s++){
             answer[s] = person.get(s);
         }
-        
         return answer;
     }
 }
