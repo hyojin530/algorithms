@@ -43,5 +43,6 @@ public class BJ11401 {
 		long result = (a * pow(b, MOD - 2)) % MOD;
 
 		System.out.println(result);
+		sc.close();
 	}
 }
