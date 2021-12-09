@@ -1,24 +1,25 @@
 import java.io.*;
-import java.util.*;
 
 public class BJ6603 {
-    static int k;
-    static int[] arr;
-    static boolean[] skip;
+    static StringBuilder sb = new StringBuilder();
 
-    static void dfs(int line, int count) {
-        if (count == 6) {
+    public static void dfs(int[] S, boolean[] visited, int depth, int k, int next) {
+        if (depth == 6) {
             for (int i = 0; i < k; i++) {
-                if (skip[i] == true)
-                    System.out.print(arr[i] + " ");
+                if (visited[i] == true) {
+                    sb.append(S[i] + " ");
+                }
             }
-            System.out.println("");
+            sb.append("\n");
+            return;
         }
 
-        for (int j = line; j < k; j++) {
-            skip[j] = true;
-            dfs(j + 1, count + 1);
-            skip[j] = false;
+        for (int i = next; i < k; i++) {
+            if (visited[i] == false) {
+                visited[i] = true;
+                dfs(S, visited, depth + 1, k, i);
+                visited[i] = false;
+            }
         }
     }
 
@@ -27,20 +28,19 @@ public class BJ6603 {
 
         while (true) {
             String[] info = br.readLine().split(" ");
-            k = Integer.parseInt(info[0]);
-            if (k == 0)
+            if (info[0].equals("0"))
                 break;
 
-            arr = new int[k];
-            skip = new boolean[k];
-
-            for (int i = 1; i <= arr.length; i++) { // 배열 입력
-                arr[i] = Integer.parseInt(info[i]);
+            int k = Integer.parseInt(info[0]);
+            int[] S = new int[k];
+            for (int i = 0; i < k; i++) {
+                S[i] = Integer.parseInt(info[i + 1]);
             }
-            Arrays.sort(arr);
-
-            dfs(0, 0);
-            System.out.println();
+            boolean[] visited = new boolean[k];
+            dfs(S, visited, 0, k, 0);
+            sb.append("\n");
         }
+
+        System.out.println(sb.toString());
     }
 }

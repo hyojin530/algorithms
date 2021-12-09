@@ -1,32 +1,47 @@
 import java.io.*;
+import java.util.*;
 
 public class BJ1406 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder str = new StringBuilder(br.readLine());
-        int cursor = str.length();
+        char[] charArr = br.readLine().toCharArray();
+        Stack<Character> leftStack = new Stack<>();
+        Stack<Character> rightStack = new Stack<>();
+
+        for (char ch : charArr) {
+            leftStack.add(ch);
+        }
+
         int n = Integer.parseInt(br.readLine());
         for (int i = 0; i < n; i++) {
             String[] cmd = br.readLine().split(" ");
             if (cmd[0].equals("L")) {
-                if (cursor > 0) {
-                    cursor--;
+                if (!leftStack.empty()) {
+                    rightStack.add(leftStack.pop());
                 }
             } else if (cmd[0].equals("D")) {
-                if (cursor < str.length()) {
-                    cursor++;
+                if (!rightStack.empty()) {
+                    leftStack.add(rightStack.pop());
                 }
             } else if (cmd[0].equals("B")) {
-                if (cursor > 0) {
-                    str.deleteCharAt(cursor - 1);
-                    cursor--;
+                if (!leftStack.empty()) {
+                    leftStack.pop();
                 }
             } else {
-                str.insert(cursor, cmd[1]);
-                cursor++;
+                leftStack.add(cmd[1].charAt(0));
             }
 
         }
-        System.out.println(str.toString());
+
+        while (!leftStack.empty()) {
+            rightStack.add(leftStack.pop());
+        }
+
+        StringBuilder sb = new StringBuilder();
+        while (!rightStack.empty()) {
+            sb.append(rightStack.pop());
+        }
+
+        System.out.print(sb.toString());
     }
 }
