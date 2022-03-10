@@ -6,40 +6,29 @@ import java.io.*;
 public class BJ2003 {
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        String[] info = br.readLine().split(" ");
+        int N = Integer.parseInt(info[0]);
+        int M = Integer.parseInt(info[1]);
 
-        int n = Integer.valueOf(st.nextToken());
-        int m = Integer.valueOf(st.nextToken());
+        int[] numList = Arrays.stream(br.readLine().split(" ")).mapToInt(s -> Integer.parseInt(s)).toArray();
 
-        st = new StringTokenizer(br.readLine());
-        int[] arr = new int[n];
-
-        for (int i = 0; i < n; i++) {
-            arr[i] = Integer.valueOf(st.nextToken());
-        }
-
-        System.out.println(twoPointer(arr, m));
-    }
-
-    static int twoPointer(int[] arr, int m) {
-        int count = 0;
-        int startPoint = 0, endPoint = 0;
-        int len = arr.length;
         int sum = 0;
-
-        while (true) {
-            if (sum >= m) {
-                sum -= arr[startPoint++];
-            } else {
-                if (endPoint >= len)
+        int caseNum = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = i; j < N; j++) {
+                sum += numList[j];
+                if (sum == M) {
+                    sum = 0;
+                    caseNum++;
                     break;
-                sum += arr[endPoint++];
+                } else if (sum > M) {
+                    sum = 0;
+                    break;
+                }
             }
-            if (sum == m) {
-                count++;
-            }
+            sum = 0;
         }
 
-        return count;
+        System.out.println(caseNum);
     }
 }
